@@ -19,7 +19,7 @@ export default function SignInScene({ navigation }) {
   useEffect(() => {
     console.log("SignInScreen willMount/useEffect :")
     try {
-      //getUsers();
+      getUsers();
     } catch (error) {
       throw error;
     }
@@ -101,6 +101,7 @@ export default function SignInScene({ navigation }) {
         <Button
           title="Sign In"
           color="red"
+          onPress={onSignInBtnPressed}
         />
       </View>
     </View>
