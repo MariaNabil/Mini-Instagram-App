@@ -11,7 +11,7 @@ import Post from './screens/Post';
 
 function ApplicationTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator >
       <Tab.Screen name="Newsfeed" component={ApplicationStack} />
       <Tab.Screen name="Bucket List" component={Bucketlist} />
       <Tab.Screen name="Profile" component={Profile} />
@@ -31,10 +31,18 @@ function ApplicationStack() {
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function Navigations() {
+export default function Navigations(isSignedIn) {
+  let initialRouteName = "";
+  if (isSignedIn) {
+    initialRouteName = "ApplicationTabs";
+  }
+  else {
+    initialRouteName = "AuthenticationStack";
+  }
+  //let initialRouteName 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="AuthenticationStack">
+      <Stack.Navigator initialRouteName={initialRouteName}>
         <Stack.Screen name="AuthenticationStack" component={SignInScene} />
         <Stack.Screen name="ApplicationTabs" component={ApplicationTabs} />
       </Stack.Navigator>

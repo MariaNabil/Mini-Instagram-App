@@ -3,12 +3,17 @@ import { View, Image, TextInput, Button, Alert }
   from 'react-native';
 import styles from '../styles';
 import { api } from '../network';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 export default function SignInScene({ navigation }) {
   //const [text, setText] = useState('');
   const [emails, setEmails] = useState([])
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [id, setId] = useState("");
+
+
 
   const logo = {
     uri: 'https://reactnative.dev/img/tiny_logo.png',
@@ -45,7 +50,11 @@ export default function SignInScene({ navigation }) {
       console.log("email : ", email);
       console.log("password : ", password);
       if (checkCredentials(email, password)) {
-        await navigation.push('ApplicationTabs')
+        await saveInAsyncStorage('@current_email', email);
+        await saveInAsyncStorage('@current_password', password);
+        await saveInAsyncStorage('@current_id', '' + '' + id);
+
+        await navigation.push('ApplicationTabs');
       }
     } catch (error) {
       console.log("SignInScene onSignInBtnPressed error : ", error);
@@ -66,9 +75,61 @@ export default function SignInScene({ navigation }) {
         return false;
       }
       else {
+        setId(e[0].id);
+        console.log("checkCredentials id : ", id)
         return true;
       }
     }
+  }
+
+  async function saveInAsyncStorage(key, value) {
+    try {
+      await AsyncStorage.setItem(key, value);
+      console.log('SignInScene saveInAsyncStorage Success', key)
+    } catch (e) {
+      console.log("SignInScene saveInAsyncStorage Error : ", error);
+    }
+  }
+
+  async function getFromAsyncStorage(key) {
+    try {
+      const value = await AsyncStorage.getItem(key)
+      if (value !== null) {
+        console.log("getFromAsyncStorage at ", key, ' : ', value)
+      }
+      else {
+        console.log("SignInScreen No Value Stored in async Storage : ", key)
+      }
+    } catch (e) {
+      console.log("getFromAsyncStorage Error :", e)
+    }
+  }
+
+  async function getStoredUser() {
+    try {
+      var user = await getFromAsyncStorage('@current_email');
+      var pass = await getFromAsyncStorage('@current_password');
+      var pass = await getFromAsyncStorage('@current_id');
+
+      //var identity = await getFromAsyncStorage('@current_password');
+
+    }
+    catch (e) {
+      console.log("getStoredUser Error", e)
+    }
+  }
+
+  async function deleteAsyncStorage() {
+    try {
+      await AsyncStorage.removeItem('@current_email')
+      await AsyncStorage.removeItem('@current_password')
+      await AsyncStorage.removeItem('@current_id')
+
+    } catch (e) {
+      // remove error
+      console.log("deleteAsyncStorage Error :", e)
+    }
+    console.log('deleteAsyncStorage Done.')
   }
 
 
@@ -103,6 +164,10 @@ export default function SignInScene({ navigation }) {
           color="red"
           onPress={onSignInBtnPressed}
         />
+        <Button title="Get From AsyncStorage"
+          onPress={getStoredUser}></Button>
+        <Button title="Delete AsyncStorage"
+          onPress={deleteAsyncStorage}></Button>
       </View>
     </View>
   );
