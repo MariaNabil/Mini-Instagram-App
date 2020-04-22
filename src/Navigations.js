@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -7,6 +7,7 @@ import Bucketlist from './screens/Bucketlist';
 import Profile from './screens/Profile';
 import Newsfeed from './screens/Newsfeed';
 import Post from './screens/Post';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 function ApplicationTabs() {
@@ -31,20 +32,18 @@ function ApplicationStack() {
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function Navigations(isSignedIn) {
-  let initialRouteName = "";
-  if (isSignedIn) {
-    initialRouteName = "ApplicationTabs";
-  }
-  else {
-    initialRouteName = "AuthenticationStack";
-  }
-  //let initialRouteName 
+export default function Navigations(props) {
+  //const [initialRoute, setInitialRoute] = useState("")
+
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRouteName}>
-        <Stack.Screen name="AuthenticationStack" component={SignInScene} />
-        <Stack.Screen name="ApplicationTabs" component={ApplicationTabs} />
+      <Stack.Navigator >
+        {props && props.isSignedIn ?
+          <Stack.Screen name="ApplicationTabs" component={ApplicationTabs} />
+          :
+          <Stack.Screen name="AuthenticationStack" component={SignInScene} />
+        }
       </Stack.Navigator>
     </NavigationContainer>
   );

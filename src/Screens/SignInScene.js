@@ -6,8 +6,8 @@ import { api } from '../network';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
+
 export default function SignInScene({ navigation }) {
-  //const [text, setText] = useState('');
   const [emails, setEmails] = useState([])
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,16 +21,23 @@ export default function SignInScene({ navigation }) {
     height: 64
   };
 
+  /* useEffect(() => {
+     getUsers()
+       .catch((error) => {
+         console.log("SignInScene useEffect Error : ", error);
+       });
+   }, []);*/
+
   useEffect(() => {
-    console.log("SignInScreen willMount/useEffect :")
-    try {
-      getUsers();
-    } catch (error) {
-      throw error;
+    async function fetchData() {
+      try {
+        await getUsers();
+      } catch (error) {
+        console.log("SignInScene useEffect Error : ", error);
+      }
     }
-
-  }, [])
-
+    fetchData();
+  }, []);
 
   async function getUsers() {
     try {
@@ -45,6 +52,7 @@ export default function SignInScene({ navigation }) {
     }
   }
 
+
   async function onSignInBtnPressed() {
     try {
       console.log("email : ", email);
@@ -52,9 +60,10 @@ export default function SignInScene({ navigation }) {
       if (checkCredentials(email, password)) {
         await saveInAsyncStorage('@current_email', email);
         await saveInAsyncStorage('@current_password', password);
-        await saveInAsyncStorage('@current_id', '' + '' + id);
+        await saveInAsyncStorage('@current_id', '' + id);
 
-        await navigation.push('ApplicationTabs');
+        // await navigation.push('ApplicationTabs');
+        showAlert("Congratulations You Signed In")
       }
     } catch (error) {
       console.log("SignInScene onSignInBtnPressed error : ", error);
@@ -75,8 +84,9 @@ export default function SignInScene({ navigation }) {
         return false;
       }
       else {
-        setId(e[0].id);
-        console.log("checkCredentials id : ", id)
+        setId('' + e[0].id);
+        console.log("checkCredentials id : ", e[0].id)
+        console.log("checkCredentials local id : ", id)
         return true;
       }
     }
@@ -91,7 +101,7 @@ export default function SignInScene({ navigation }) {
     }
   }
 
-  async function getFromAsyncStorage(key) {
+  /*async function getFromAsyncStorage(key) {
     try {
       const value = await AsyncStorage.getItem(key)
       if (value !== null) {
@@ -105,19 +115,6 @@ export default function SignInScene({ navigation }) {
     }
   }
 
-  async function getStoredUser() {
-    try {
-      var user = await getFromAsyncStorage('@current_email');
-      var pass = await getFromAsyncStorage('@current_password');
-      var pass = await getFromAsyncStorage('@current_id');
-
-      //var identity = await getFromAsyncStorage('@current_password');
-
-    }
-    catch (e) {
-      console.log("getStoredUser Error", e)
-    }
-  }
 
   async function deleteAsyncStorage() {
     try {
@@ -130,7 +127,7 @@ export default function SignInScene({ navigation }) {
       console.log("deleteAsyncStorage Error :", e)
     }
     console.log('deleteAsyncStorage Done.')
-  }
+  }*/
 
 
   const showAlert = (alertTitle, alertMessage) =>
@@ -138,15 +135,11 @@ export default function SignInScene({ navigation }) {
       alertTitle,
       alertMessage,
       [
-        /*{
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },*/
         { text: "OK", onPress: () => console.log("OK Pressed") }
       ],
       { cancelable: false }
     );
+
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.imageStyle} />
@@ -164,10 +157,10 @@ export default function SignInScene({ navigation }) {
           color="red"
           onPress={onSignInBtnPressed}
         />
-        <Button title="Get From AsyncStorage"
+        {/*<Button title="Get From AsyncStorage"
           onPress={getStoredUser}></Button>
         <Button title="Delete AsyncStorage"
-          onPress={deleteAsyncStorage}></Button>
+  onPress={deleteAsyncStorage}></Button>*/}
       </View>
     </View>
   );

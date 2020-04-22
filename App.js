@@ -1,23 +1,55 @@
 import Navigations from './src/Navigations';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import { View, ActivityIndicator } from 'react-native';
 
-function App() {
+const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false)
-  useEffect(async () => {
-    //console.log("SignInScreen willMount/useEffect :")
-    try {
-      //getUsers();
-      //const isSignedIn = await getStoredUser();
-      setIsSignedIn(await getStoredUser());
-      console.log("App.js useEffect isSignedIn : ", isSignedIn)
-      /* if (current_user){
- 
-       }*/
-    } catch (error) {
-      throw error;
-    }
+  const [initialScreen, setInitialScreen] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
+  /*useEffect(async () => {
+    try {
+      setIsLoading(true);
+      const flag = await getStoredUser();
+      console.log("App.js useEffect flag : ", flag)
+      setIsSignedIn(flag);
+      //setInitialScreen("ApplicationTabs")
+    } catch (error) {
+      console.log("App.js useEffect error : ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [])*/
+
+  /*useEffect(() => {
+    setIsLoading(true);
+    getStoredUser()
+      .then(flag => {
+        setIsSignedIn(flag);
+        console.log("App.js useEffect flag : ", flag)
+      })
+      .catch(error => {
+        console.log("App.js useEffect error : ", error)
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
+  }, [])*/
+
+  useEffect(() => {
+    try {
+      setIsLoading(true);
+      async function runAsync() {
+        await getStoredUser();
+        console.log("App.js useEffect isSignedIn : ", isSignedIn)
+      }
+      runAsync();
+    } catch (error) {
+      console.log("App.js useEffect error : ", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [])
 
 
@@ -27,6 +59,7 @@ function App() {
       const value = await AsyncStorage.getItem(key)
       if (value !== null) {
         console.log("App.js getFromAsyncStorage at ", key, ' : ', value)
+        return true;
       }
       else {
         console.log("App.js No Value Stored in async Storage : ", key)
@@ -36,7 +69,7 @@ function App() {
       console.log("App.js getFromAsyncStorage Error :", e)
       return false;
     }
-    return true;
+    //return true;
   }
 
   async function getStoredUser() {
@@ -51,7 +84,8 @@ function App() {
 
       if (user) {
         console.log("App.js getStoredUser return : ", true)
-        return true;
+        setIsSignedIn(true)
+        //  return true;
       }
     }
     catch (e) {
@@ -59,10 +93,21 @@ function App() {
       console.log("App.js getStoredUser Error", e)
     }
     console.log("App.js getStoredUser return : ", false)
-    return false;
+    setIsSignedIn(false);
+    //return false;
   }
+  console.log("App.js getInitialScreen : ", initialScreen);
 
-
-  return (Navigations(isSignedIn));
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignContent: "center" }}>
+        <ActivityIndicator size='large' />
+      </View>
+    )
+  } else {
+    return (
+      <Navigations isSignedIn={isSignedIn} />
+    )
+  }
 }
 export default App;
