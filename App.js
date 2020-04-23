@@ -7,7 +7,7 @@ import { Provider, connect } from 'react-redux';
 import { NavigationService } from './src/NavigationService'
 import { useNavigation } from '@react-navigation/native';
 
-const App = () => {
+const App = (props) => {
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [initialScreen, setInitialScreen] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -42,6 +42,7 @@ const App = () => {
   }, [])*/
 
   useEffect(() => {
+    console.log("LALALALAAA : ", props)
     try {
       //store.subscribe(ReLoad);
       //store.subscribe(Navigations());

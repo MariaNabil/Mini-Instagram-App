@@ -3,7 +3,9 @@ import Navigations from '../Navigations';
 import { NavigationAction } from '@react-navigation/native';
 import { NavigationService } from '../NavigationService'
 import { Provider, connect } from 'react-redux';
-
+import createSagaMiddleware from 'redux-saga'
+import { loginUser } from './Sagas'
+import { applyMiddleware, getDefaultMiddleware } from '@reduxjs/toolkit'
 //import { nav } from '../nav'
 
 /*const rootSlice = createSlice({
@@ -68,13 +70,37 @@ const rootSlice = createSlice({
 
     },
 })
+
+const sagaMiddleware = createSagaMiddleware();
+
+//sagaMiddleware.run(loginUser);
+
+
+const middleware = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware];
+
+
 export const store = configureStore({
     reducer: {
         user: rootSlice.reducer,
         navState: navSlice.reducer,
-    }
-})
+    },
+    middleware,
+});
 
+
+//sagaMiddleware.run(loginUser);
+/*
+const AppNavigator = StackNavigator(Navigations());
+
+const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('AuthenticationStack'));
+
+const navReducer = (state = initialState, action) => {
+    const nextState = AppNavigator.router.getStateForAction(action, state);
+
+    // Simply return the original `state` if `nextState` is null or undefined.
+    return nextState || state;
+};
+*/
 function onStateChange() {
     var s = store.getState();
     console.log("STORE onStateChanged : ", s);
@@ -85,6 +111,8 @@ function onStateChange() {
     //NavigationService.navigate('Profile');
     // return (<Navigations />)
 }
+
+
 store.subscribe(onStateChange)
 export const { signIn, signOut } = rootSlice.actions
 export const { logIn, logout } = navSlice.actions

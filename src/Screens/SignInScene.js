@@ -43,22 +43,11 @@ export default function SignInScene({ navigation }) {
     try {
       const data = await api.request('users', 'GET', {});
       setEmails(data);
-      //setCounter(data.length + 1)
       console.log("SignInScreen getUsers Success : length ", data)
 
     } catch (error) {
       console.log("SignInScreen getUsers error : ", error)
       throw error
-    }
-  }
-
-  async function onSignOutBtnPressed() {
-    try {
-      store.dispatch(signOut());
-      store.dispatch(logout());
-
-    } catch (error) {
-      console.log("SignInScene onSignOutBtnPressed error : ", error);
     }
   }
 
@@ -71,20 +60,14 @@ export default function SignInScene({ navigation }) {
         await saveInAsyncStorage('@current_password', password);
         await saveInAsyncStorage('@current_id', '' + id);
 
-        //console.log("STORE : ", store.getState())
         store.dispatch(signIn());
         store.dispatch(logIn());
-
-        //console.log("STORE : ", store.getState())
-        // await navigation.push('ApplicationTabs');
-        await showAlert("Congratulations You Signed In Please Reload To Enter our Page")
+        await showAlert("Congratulations You Signed In")
 
       }
     } catch (error) {
       console.log("SignInScene onSignInBtnPressed error : ", error);
     }
-    //return <Navigations />
-
   }
 
   function checkCredentials(email, password) {
@@ -118,35 +101,6 @@ export default function SignInScene({ navigation }) {
     }
   }
 
-  /*async function getFromAsyncStorage(key) {
-    try {
-      const value = await AsyncStorage.getItem(key)
-      if (value !== null) {
-        console.log("getFromAsyncStorage at ", key, ' : ', value)
-      }
-      else {
-        console.log("SignInScreen No Value Stored in async Storage : ", key)
-      }
-    } catch (e) {
-      console.log("getFromAsyncStorage Error :", e)
-    }
-  }
-
-
-  async function deleteAsyncStorage() {
-    try {
-      await AsyncStorage.removeItem('@current_email')
-      await AsyncStorage.removeItem('@current_password')
-      await AsyncStorage.removeItem('@current_id')
-
-    } catch (e) {
-      // remove error
-      console.log("deleteAsyncStorage Error :", e)
-    }
-    console.log('deleteAsyncStorage Done.')
-  }*/
-
-
   const showAlert = (alertTitle, alertMessage) =>
     Alert.alert(
       alertTitle,
@@ -174,15 +128,6 @@ export default function SignInScene({ navigation }) {
           color="red"
           onPress={onSignInBtnPressed}
         />
-        <Button
-          title="Sign Out"
-          color="blue"
-          onPress={onSignOutBtnPressed}
-        />
-        {/*<Button title="Get From AsyncStorage"
-          onPress={getStoredUser}></Button>
-        <Button title="Delete AsyncStorage"
-  onPress={deleteAsyncStorage}></Button>*/}
       </View>
     </View>
   );

@@ -35,7 +35,13 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function Navigations() {
-  console.log("HELLO FROM NAVIGATIONS : isSignedIn :", store.getState().user)
+  const [isSignedIn, setIsSignedIn] = useState(false)
+  useEffect(() => {
+    store.subscribe(() => {
+      setIsSignedIn(store.getState().user)
+    })
+  }, [])
+
   return (
     <NavigationContainer>
       <Stack.Navigator   >
@@ -44,8 +50,9 @@ export default function Navigations() {
           :
           <Stack.Screen name="AuthenticationStack" component={SignInScene} />}
 
-        {/*} <Stack.Screen name="AuthenticationStack" component={SignInScene} />
+        {/*d<Stack.Screen name="AuthenticationStack" component={SignInScene} />
         <Stack.Screen name="ApplicationTabs" component={ApplicationTabs} />*/}
+
       </Stack.Navigator>
     </NavigationContainer>
   );
