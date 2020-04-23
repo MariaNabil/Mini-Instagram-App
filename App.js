@@ -2,6 +2,10 @@ import Navigations from './src/Navigations';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import { View, ActivityIndicator } from 'react-native';
+import { store, signIn, signOut, logIn } from './src/app/store'
+import { Provider, connect } from 'react-redux';
+import { NavigationService } from './src/NavigationService'
+import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false)
@@ -39,10 +43,15 @@ const App = () => {
 
   useEffect(() => {
     try {
+      //store.subscribe(ReLoad);
+      //store.subscribe(Navigations());
       setIsLoading(true);
       async function runAsync() {
         await getStoredUser();
         console.log("App.js useEffect isSignedIn : ", isSignedIn)
+        //CHANGES HEREEE
+        // const navigation = useNavigation();
+        //await NavigationService.setNavigator();
       }
       runAsync();
     } catch (error) {
@@ -85,7 +94,11 @@ const App = () => {
       if (user) {
         console.log("App.js getStoredUser return : ", true)
         setIsSignedIn(true)
-        //  return true;
+        await store.dispatch(signIn());
+        console.log("HEREEEEEEEE")
+
+        store.dispatch(logIn())
+        store.dispatch(signIn());
       }
     }
     catch (e) {
@@ -106,8 +119,14 @@ const App = () => {
     )
   } else {
     return (
-      <Navigations isSignedIn={isSignedIn} />
+      <Navigations />
     )
   }
+  /* function ReLoad() {
+     console.log("HELLO FROM RELOAD");
+     return (
+       <Navigations />
+     )
+}*/
 }
 export default App;

@@ -8,6 +8,8 @@ import Profile from './screens/Profile';
 import Newsfeed from './screens/Newsfeed';
 import Post from './screens/Post';
 import AsyncStorage from '@react-native-community/async-storage';
+import { store } from './app/store';
+import { Provider } from 'react-redux';
 
 
 function ApplicationTabs() {
@@ -32,18 +34,18 @@ function ApplicationStack() {
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function Navigations(props) {
-  //const [initialRoute, setInitialRoute] = useState("")
-
-
+export default function Navigations() {
+  console.log("HELLO FROM NAVIGATIONS : isSignedIn :", store.getState().user)
   return (
     <NavigationContainer>
-      <Stack.Navigator >
-        {props && props.isSignedIn ?
+      <Stack.Navigator   >
+        {store.getState().user ?
           <Stack.Screen name="ApplicationTabs" component={ApplicationTabs} />
           :
-          <Stack.Screen name="AuthenticationStack" component={SignInScene} />
-        }
+          <Stack.Screen name="AuthenticationStack" component={SignInScene} />}
+
+        {/*} <Stack.Screen name="AuthenticationStack" component={SignInScene} />
+        <Stack.Screen name="ApplicationTabs" component={ApplicationTabs} />*/}
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, View, Button, Alert }
-  from 'react-native';
+import { Text, View, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import { store, signOut, logout } from '../app/store';
 
 
 
@@ -11,6 +11,9 @@ export default function Profile({ navigation }) {
   async function logoutBtnPressed() {
     await deleteAsyncStorage();
     //await navigation.push('AuthenticationStack');
+    store.dispatch(signOut());
+    store.dispatch(logout());
+
     showAlert("Congratulations!", " You Signed Out");
   }
   const showAlert = (alertTitle, alertMessage) =>

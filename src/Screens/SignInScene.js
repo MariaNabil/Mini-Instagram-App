@@ -4,7 +4,7 @@ import { View, Image, TextInput, Button, Alert }
 import styles from '../styles';
 import { api } from '../network';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import { store, signIn, signOut, logIn, logout } from '../app/store'
 
 
 export default function SignInScene({ navigation }) {
@@ -52,6 +52,15 @@ export default function SignInScene({ navigation }) {
     }
   }
 
+  async function onSignOutBtnPressed() {
+    try {
+      store.dispatch(signOut());
+      store.dispatch(logout());
+
+    } catch (error) {
+      console.log("SignInScene onSignOutBtnPressed error : ", error);
+    }
+  }
 
   async function onSignInBtnPressed() {
     try {
@@ -62,12 +71,20 @@ export default function SignInScene({ navigation }) {
         await saveInAsyncStorage('@current_password', password);
         await saveInAsyncStorage('@current_id', '' + id);
 
+        //console.log("STORE : ", store.getState())
+        store.dispatch(signIn());
+        store.dispatch(logIn());
+
+        //console.log("STORE : ", store.getState())
         // await navigation.push('ApplicationTabs');
-        showAlert("Congratulations You Signed In")
+        await showAlert("Congratulations You Signed In")
+
       }
     } catch (error) {
       console.log("SignInScene onSignInBtnPressed error : ", error);
     }
+    //return <Navigations />
+
   }
 
   function checkCredentials(email, password) {
@@ -156,6 +173,11 @@ export default function SignInScene({ navigation }) {
           title="Sign In"
           color="red"
           onPress={onSignInBtnPressed}
+        />
+        <Button
+          title="Sign Out"
+          color="blue"
+          onPress={onSignOutBtnPressed}
         />
         {/*<Button title="Get From AsyncStorage"
           onPress={getStoredUser}></Button>
