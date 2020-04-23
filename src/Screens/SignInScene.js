@@ -77,7 +77,7 @@ export default function SignInScene({ navigation }) {
 
         //console.log("STORE : ", store.getState())
         // await navigation.push('ApplicationTabs');
-        await showAlert("Congratulations You Signed In")
+        await showAlert("Congratulations You Signed In Please Reload To Enter our Page")
 
       }
     } catch (error) {

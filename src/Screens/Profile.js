@@ -14,7 +14,7 @@ export default function Profile({ navigation }) {
     store.dispatch(signOut());
     store.dispatch(logout());
 
-    showAlert("Congratulations!", " You Signed Out");
+    showAlert("Congratulations!", " You Signed Out Please Reload to Get Out Of Your Page");
   }
   const showAlert = (alertTitle, alertMessage) =>
     Alert.alert(
