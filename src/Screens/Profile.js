@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { store, signOut, logout, removeUser } from '../app/store';
+import { store, signOut, logout, removeUser } from '../redux/store';
 
 
 

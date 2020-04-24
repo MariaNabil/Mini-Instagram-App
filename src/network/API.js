@@ -75,9 +75,6 @@ class API {
     }
 
     async postUsingAxios(path, obj) {
-
-
-
         try {
             const response = await this.instance.post(path, obj)
             console.log("API Class , postUsingAxios , response : ", response)

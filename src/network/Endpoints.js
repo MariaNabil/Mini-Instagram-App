@@ -6,9 +6,16 @@ class EndPoints {
             "users": {
                 baseUrl: WEBOPS_API.BASE_URL,
                 url: WEBOPS_API.USERS,
-                method: API_METHODS.GET,
+                //method: API_METHODS.GET,
                 needsAuth: false
             },
+
+            "bucketlist": {
+                baseUrl: WEBOPS_API.BASE_URL,
+                url: WEBOPS_API.BUCKETLIST,
+                //method: API_METHODS.GET,
+                needsAuth: false
+            }
             /*"posts": {
                 baseUrl: WEBOPS_API.BASE_URL,
                 url: WEBOPS_API.POSTS,

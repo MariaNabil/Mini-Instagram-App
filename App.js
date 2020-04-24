@@ -2,7 +2,7 @@ import Navigations from './src/Navigations';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import { View, ActivityIndicator } from 'react-native';
-import { store, signIn, addUser } from './src/app/store'
+import { store, signIn, addUser } from './src/redux/store'
 import User from './src/Models/User';
 
 const App = (props) => {
@@ -47,7 +47,6 @@ const App = (props) => {
       if (user != null && user != undefined) {
         let mUser = new User(userObj = user);
         store.dispatch(signIn());
-
         console.log("TYPE OF MUSER : ", typeof (JSON.stringify(mUser)))
         store.dispatch(addUser(JSON.stringify(mUser)));
       }

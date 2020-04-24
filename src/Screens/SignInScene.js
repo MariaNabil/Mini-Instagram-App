@@ -3,7 +3,7 @@ import { View, Image, TextInput, Button, Alert } from 'react-native';
 import styles from '../styles';
 import { api } from '../network';
 import AsyncStorage from '@react-native-community/async-storage';
-import { store, signIn, signOut, logIn, logout, addUser } from '../app/store'
+import { store, signIn, signOut, logIn, logout, addUser } from '../redux/store'
 import User from '../Models/User';
 
 
@@ -11,7 +11,6 @@ export default function SignInScene({ navigation }) {
   const [emails, setEmails] = useState([])
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [id, setId] = useState(0);
 
 
 
@@ -54,15 +53,9 @@ export default function SignInScene({ navigation }) {
         let mUser = new User(userObj = { id: userId, email: email, password: password });
         console.log("FOO : ", mUser);
 
-
         await saveInAsyncStorage('@current_user', JSON.stringify(mUser));
-        /*await saveInAsyncStorage('@current_email', email);
-        await saveInAsyncStorage('@current_password', password);
-        await saveInAsyncStorage('@current_id', '' + id);*/
-
         store.dispatch(signIn());
         store.dispatch(addUser(JSON.stringify(mUser)));
-
         //store.dispatch(logIn());
         await showAlert("Congratulations You Signed In")
 
@@ -113,6 +106,7 @@ export default function SignInScene({ navigation }) {
       ],
       { cancelable: false }
     );
+
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.imageStyle} />

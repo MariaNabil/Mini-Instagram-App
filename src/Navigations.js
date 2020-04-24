@@ -8,7 +8,7 @@ import Profile from './screens/Profile';
 import Newsfeed from './screens/Newsfeed';
 import Post from './screens/Post';
 import AsyncStorage from '@react-native-community/async-storage';
-import { store } from './app/store';
+import { store } from './redux/store';
 import { Provider } from 'react-redux';
 
 
