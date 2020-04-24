@@ -8,7 +8,6 @@ import { CheckConnectivity, showAlert, saveInAsyncStorage, isConnected } from '.
 
 
 export default function SignInScene({ navigation }) {
-  const [emails, setEmails] = useState([])
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -20,58 +19,51 @@ export default function SignInScene({ navigation }) {
     height: 64
   };
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        CheckConnectivity();
-        if (isConnected) {
-          await getUsers();
-        }
-      } catch (error) {
-        console.log("SignInScene useEffect Error : ", error);
-        showAlert('' + error, "Please check The Server Connection")
-
-      }
-    }
-    fetchData();
-  }, []);
-
   async function getUsers() {
     try {
       const data = await api.request('users', 'GET', {});
-      setEmails(data);
       console.log("SignInScreen getUsers Success : length ", data)
-
+      return data;
     } catch (error) {
-      console.log("SignInScreen getUsers error : ", error)
-      throw error
+      console.log("SignInScreen getUsers ERROR : ", error)
+      return null;
+      //throw error
     }
   }
 
   async function onSignInBtnPressed() {
     try {
-      console.log("email : ", email);
-      console.log("password : ", password);
-      userId = checkCredentials(email, password);
-      if (userId != null && userId != undefined) {
-        console.log("checkCredentials local id : ", userId)
-        let mUser = new User(userObj = { id: userId, email: email, password: password });
-        console.log("FOO : ", mUser);
+      if (await isConnected()) {
+        const allEmails = await getUsers();
+        if (allEmails == null) {
+          await showAlert("Server Connection", "Please Check Your Server Connection")
+          return;
+        }
+        userId = checkCredentials(email, password, allEmails);
+        if (userId != null && userId != undefined) {
+          console.log("checkCredentials local id : ", userId)
+          let mUser = new User(userObj = { id: userId, email: email, password: password });
+          console.log("FOO : ", mUser);
 
-        await saveInAsyncStorage('@current_user', JSON.stringify(mUser));
-        store.dispatch(signIn());
-        store.dispatch(addUser(JSON.stringify(mUser)));
-        //store.dispatch(logIn());
-        await showAlert("Congratulations You Signed In")
+          await saveInAsyncStorage('@current_user', JSON.stringify(mUser));
+          store.dispatch(signIn());
+          store.dispatch(addUser(JSON.stringify(mUser)));
+          await showAlert("Congratulations You Signed In")
+        }
+      }
 
+      else {
+        showAlert("You Are Offline", "Please check Your Internet Connection")
       }
     } catch (error) {
       console.log("SignInScene onSignInBtnPressed error : ", error);
+
     }
   }
 
-  function checkCredentials(email, password) {
-    let e = emails.filter(obj => obj.email == email)
+  function checkCredentials(email, password, allEmails) {
+    console.log("EMAILS : ", allEmails);
+    let e = allEmails.filter(obj => obj.email == email)
     console.log(e);
     if (e == undefined || e.length == 0) {
       showAlert("Not Found", "No User Found With This Email .");
@@ -85,9 +77,7 @@ export default function SignInScene({ navigation }) {
       }
       else {
         let userId = e[0].id
-        //setId(userId);
         console.log("checkCredentials id : ", (userId))
-        //console.log("checkCredentials local id : ", id)
         return userId;
       }
     }

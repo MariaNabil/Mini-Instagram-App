@@ -19,10 +19,11 @@ export function CheckConnectivity() {
     });
 }
 
-export function isConnected() {
-    NetInfo.fetch().then(state => {
+export async function isConnected() {
+    let flag = false;
+    flag = await NetInfo.fetch().then(state => {
         console.log("Connection type", state.type);
-        console.log("Is connected?", state.isConnected);
+        console.log("Is connected?", typeof (state.isConnected));
         if (state.isConnected) {
             return true;
         }
@@ -30,6 +31,7 @@ export function isConnected() {
             return false;
         }
     });
+    return flag;
 }
 
 export const showAlert = (alertTitle, alertMessage) =>
