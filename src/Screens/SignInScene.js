@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Image, TextInput, Button, Alert } from 'react-native';
 import styles from '../styles';
 import { api } from '../network';
-import AsyncStorage from '@react-native-community/async-storage';
 import { store, signIn, signOut, logIn, logout, addUser } from '../redux/store'
 import User from '../Models/User';
+import { CheckConnectivity, showAlert, saveInAsyncStorage, isConnected } from '../Helpers'
 
 
 export default function SignInScene({ navigation }) {
@@ -23,9 +23,14 @@ export default function SignInScene({ navigation }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        await getUsers();
+        CheckConnectivity();
+        if (isConnected) {
+          await getUsers();
+        }
       } catch (error) {
         console.log("SignInScene useEffect Error : ", error);
+        showAlert('' + error, "Please check The Server Connection")
+
       }
     }
     fetchData();
@@ -88,24 +93,9 @@ export default function SignInScene({ navigation }) {
     }
   }
 
-  async function saveInAsyncStorage(key, value) {
-    try {
-      await AsyncStorage.setItem(key, value);
-      console.log('SignInScene saveInAsyncStorage Success', key)
-    } catch (e) {
-      console.log("SignInScene saveInAsyncStorage Error : ", error);
-    }
-  }
 
-  const showAlert = (alertTitle, alertMessage) =>
-    Alert.alert(
-      alertTitle,
-      alertMessage,
-      [
-        { text: "OK", onPress: () => console.log("OK Pressed") }
-      ],
-      { cancelable: false }
-    );
+
+
 
   return (
     <View style={styles.container}>

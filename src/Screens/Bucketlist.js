@@ -3,11 +3,14 @@ import { Text, View, TextInput, Alert, TouchableWithoutFeedback }
   from 'react-native';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
+import { saveInAsyncStorage, showAlert } from '../Helpers'
 
 export default function Bucketlist({ navigation }) {
+  //#region States
   const [place, setPlace] = useState({});
   const [places, setPlaces] = useState([]);
   const [text, setText] = useState('')
+  //#endregion
 
   //#region UseEffect 
   useEffect(() => {
@@ -39,27 +42,6 @@ export default function Bucketlist({ navigation }) {
       console.log("App.js getStoredUser Error", e)
     }
   }
-
-  async function savePlacesToAsyncStorage(key, value) {
-    try {
-      await AsyncStorage.setItem(key, value);
-      console.log('BUCKETLIST SCREEN saveInAsyncStorage Success', key)
-    } catch (e) {
-      console.log("BUCKETLIST SCREEN saveInAsyncStorage Error : ", error);
-    }
-  }
-  //#endregion
-
-  //#region Helper Functions
-  const showAlert = (alertTitle, alertMessage) =>
-    Alert.alert(
-      alertTitle,
-      alertMessage,
-      [
-        { text: "OK" }
-      ],
-      { cancelable: false }
-    );
   //#endregion
 
   //#region Flatlist Functions
@@ -96,7 +78,7 @@ export default function Bucketlist({ navigation }) {
     let p = places;
     p.push({ id, name } = place);
     setPlaces(p);
-    savePlacesToAsyncStorage('@bucketlist', JSON.stringify(places));
+    saveInAsyncStorage('@bucketlist', JSON.stringify(places));
     setText('');
   }
   //#endregion
