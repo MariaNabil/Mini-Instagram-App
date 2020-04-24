@@ -38,14 +38,14 @@ export default function Navigations() {
   const [isSignedIn, setIsSignedIn] = useState(false)
   useEffect(() => {
     store.subscribe(() => {
-      setIsSignedIn(store.getState().user)
+      setIsSignedIn(store.getState().isSignedIn)
     })
   }, [])
 
   return (
     <NavigationContainer>
       <Stack.Navigator   >
-        {store.getState().user ?
+        {store.getState().isSignedIn ?
           <Stack.Screen name="ApplicationTabs" component={ApplicationTabs} />
           :
           <Stack.Screen name="AuthenticationStack" component={SignInScene} />}

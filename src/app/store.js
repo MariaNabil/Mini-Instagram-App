@@ -1,42 +1,8 @@
 import { configureStore, createAction, createReducer, createSlice, reducers } from '@reduxjs/toolkit';
-import Navigations from '../Navigations';
-import { NavigationAction } from '@react-navigation/native';
-import { NavigationService } from '../NavigationService'
-import { Provider, connect } from 'react-redux';
 import createSagaMiddleware from 'redux-saga'
-import { loginUser } from './Sagas'
-import { applyMiddleware, getDefaultMiddleware } from '@reduxjs/toolkit'
-//import { nav } from '../nav'
-
-/*const rootSlice = createSlice({
-    name: 'user',
-    initialState: false,
-    reducers: {
-        //signIn: state => true
-        signIn: state => {
-            state = true
-        }
-        /* signIn(state) {
-             state => true;
-             //NavigationAction.push('ApplicationTabs')
-             //dispatch(NavigationActions.navigate({ routeName: 'ApplicationTabs' }));
-             //NavigationService.navigate('ApplicationTabs');
- 
-             // await NavigationAction.push('ApplicationTabs');
-             //NavigationSe
-         }
-        ,
-        signOut(state) {
-            state => false;
-            //NavigationService.navigate('AuthenticationStack');
-            //dispatch(NavigationActions.navigate({ routeName: 'AuthenticationStack' }));
-            //NavigationAction.push('AuthenticationStack')
-            //await navigator.push('AuthenticationStack');
-            //NavigationSe
-        },
-
-    },
-})*/
+///import { loginUser } from './Sagas'
+import { getDefaultMiddleware } from '@reduxjs/toolkit'
+import User from '../Models/User';
 
 const navSlice = createSlice({
     name: 'navState',
@@ -55,7 +21,7 @@ const navSlice = createSlice({
 })
 
 const rootSlice = createSlice({
-    name: 'user',
+    name: 'isSignedIn',
     initialState: false,
     reducers: {
         //signIn: state => true
@@ -71,6 +37,21 @@ const rootSlice = createSlice({
     },
 })
 
+const userSlice = createSlice({
+    name: 'user',
+    initialState: null,
+    reducers: {
+        addUser: (state, action) => {
+            state = JSON.stringify(new User(JSON.parse(action.payload)));
+            return state;
+        },
+        removeUser(state) {
+            state = null;
+            return state;
+        },
+
+    },
+})
 const sagaMiddleware = createSagaMiddleware();
 
 //sagaMiddleware.run(loginUser);
@@ -81,7 +62,8 @@ const middleware = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware];
 
 export const store = configureStore({
     reducer: {
-        user: rootSlice.reducer,
+        isSignedIn: rootSlice.reducer,
+        user: userSlice.reducer,
         navState: navSlice.reducer,
     },
     middleware,
@@ -104,16 +86,13 @@ const navReducer = (state = initialState, action) => {
 function onStateChange() {
     var s = store.getState();
     console.log("STORE onStateChanged : ", s);
-    console.log(store.getState().user);
-
-    //console.log("NAVSTATE onStateChanged : ", store.getState().navState);
-    //console.log(store.navState);
-    //NavigationService.navigate('Profile');
-    // return (<Navigations />)
+    //console.log(store.getState().user);
 }
 
 
 store.subscribe(onStateChange)
 export const { signIn, signOut } = rootSlice.actions
 export const { logIn, logout } = navSlice.actions
+export const { addUser, removeUser } = userSlice.actions
+
 

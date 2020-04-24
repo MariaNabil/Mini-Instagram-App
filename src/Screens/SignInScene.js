@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, TextInput, Button, Alert }
-  from 'react-native';
+import { View, Image, TextInput, Button, Alert } from 'react-native';
 import styles from '../styles';
 import { api } from '../network';
 import AsyncStorage from '@react-native-community/async-storage';
-import { store, signIn, signOut, logIn, logout } from '../app/store'
+import { store, signIn, signOut, logIn, logout, addUser } from '../app/store'
+import User from '../Models/User';
 
 
 export default function SignInScene({ navigation }) {
   const [emails, setEmails] = useState([])
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [id, setId] = useState("");
+  // const [id, setId] = useState(0);
 
 
 
@@ -20,13 +20,6 @@ export default function SignInScene({ navigation }) {
     width: 64,
     height: 64
   };
-
-  /* useEffect(() => {
-     getUsers()
-       .catch((error) => {
-         console.log("SignInScene useEffect Error : ", error);
-       });
-   }, []);*/
 
   useEffect(() => {
     async function fetchData() {
@@ -55,13 +48,22 @@ export default function SignInScene({ navigation }) {
     try {
       console.log("email : ", email);
       console.log("password : ", password);
-      if (checkCredentials(email, password)) {
-        await saveInAsyncStorage('@current_email', email);
+      userId = checkCredentials(email, password);
+      if (userId != null && userId != undefined) {
+        console.log("checkCredentials local id : ", userId)
+        let mUser = new User(userObj = { id: userId, email: email, password: password });
+        console.log("FOO : ", mUser);
+
+
+        await saveInAsyncStorage('@current_user', JSON.stringify(mUser));
+        /*await saveInAsyncStorage('@current_email', email);
         await saveInAsyncStorage('@current_password', password);
-        await saveInAsyncStorage('@current_id', '' + id);
+        await saveInAsyncStorage('@current_id', '' + id);*/
 
         store.dispatch(signIn());
-        store.dispatch(logIn());
+        store.dispatch(addUser(JSON.stringify(mUser)));
+
+        //store.dispatch(logIn());
         await showAlert("Congratulations You Signed In")
 
       }
@@ -75,19 +77,20 @@ export default function SignInScene({ navigation }) {
     console.log(e);
     if (e == undefined || e.length == 0) {
       showAlert("Not Found", "No User Found With This Email .");
-      return false;
+      return null;
     }
     else {
       e = e.filter(obj => obj.password == password)
       if (e == undefined || e.length == 0) {
         showAlert("Wrong Password", "Please Re-check The Password .");
-        return false;
+        return null;
       }
       else {
-        setId('' + e[0].id);
-        console.log("checkCredentials id : ", e[0].id)
-        console.log("checkCredentials local id : ", id)
-        return true;
+        let userId = e[0].id
+        //setId(userId);
+        console.log("checkCredentials id : ", (userId))
+        //console.log("checkCredentials local id : ", id)
+        return userId;
       }
     }
   }
@@ -110,7 +113,6 @@ export default function SignInScene({ navigation }) {
       ],
       { cancelable: false }
     );
-
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.imageStyle} />

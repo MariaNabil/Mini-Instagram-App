@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { store, signOut, logout } from '../app/store';
+import { store, signOut, logout, removeUser } from '../app/store';
 
 
 
@@ -12,9 +12,10 @@ export default function Profile({ navigation }) {
     await deleteAsyncStorage();
     //await navigation.push('AuthenticationStack');
     store.dispatch(signOut());
-    store.dispatch(logout());
+    store.dispatch(removeUser());
 
-    showAlert("Congratulations!", " You Signed Out Please Reload to Get Out Of Your Page");
+    // store.dispatch(logout());
+    showAlert("Congratulations!", " You Signed Out ");
   }
   const showAlert = (alertTitle, alertMessage) =>
     Alert.alert(
@@ -32,9 +33,7 @@ export default function Profile({ navigation }) {
     );
   async function deleteAsyncStorage() {
     try {
-      await AsyncStorage.removeItem('@current_email')
-      await AsyncStorage.removeItem('@current_password')
-      await AsyncStorage.removeItem('@current_id')
+      await AsyncStorage.removeItem('@current_user')
     } catch (e) {
       // remove error
       console.log("deleteAsyncStorage Error :", e)
