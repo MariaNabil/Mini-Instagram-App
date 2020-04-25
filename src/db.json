@@ -2,7 +2,12 @@
   "users": [
     {
       "id": 1,
-      "email": "maria",
+      "email": "Maria",
+      "password": "123"
+    },
+    {
+      "id": 2,
+      "email": "Amin",
       "password": "123"
     }
   ],
@@ -10,42 +15,52 @@
     {
       "id": 1,
       "image": 2,
-      "place": "Dahab",
+      "place": "Alex",
       "user": {
         "id": 1,
-        "email": "maria",
+        "email": "Maria",
         "password": "123"
       }
     },
     {
       "id": 2,
-      "image": 3,
-      "place": "Paris",
+      "image": 5,
+      "place": "Luxor",
       "user": {
         "id": 1,
-        "email": "maria",
+        "email": "Maria",
         "password": "123"
       }
     },
     {
       "id": 3,
-      "image": 5,
-      "place": "Luxor",
+      "image": 1,
+      "place": "Maldives",
       "user": {
         "id": 1,
-        "email": "maria",
+        "email": "Maria",
+        "password": "123"
+      }
+    },
+    {
+      "id": 4,
+      "image": 3,
+      "place": "Paris",
+      "user": {
+        "id": 2,
+        "email": "Amin",
+        "password": "123"
+      }
+    },
+    {
+      "id": 5,
+      "image": 4,
+      "place": "Austalia",
+      "user": {
+        "id": 2,
+        "email": "Amin",
         "password": "123"
       }
     }
-  ],
-  "comments": [
-    {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
-    }
-  ],
-  "profile": {
-    "name": "typicode"
-  }
+  ]
 }

@@ -19,13 +19,9 @@ export default function Newsfeed({ navigation }) {
 
           let data = await api.request('posts', 'GET', {});
           let mPosts = [];
-          //let p = [];
-          //let paths = []
           for (let i = 0; i < data.length; i++) {
             let postObj = new Post(data[i].id, data[i].image, data[i].place, data[i].user);
             mPosts.push(postObj);
-            //paths.push(postObj.image)
-            console.log("IMAGES : ", postObj.image)
           }
           setPosts(mPosts);
           let paths = []
@@ -33,12 +29,6 @@ export default function Newsfeed({ navigation }) {
             paths.push(images[j].path)
           }
           setImgPaths(paths);
-          console.log("Newsfeed Screen mPosts : ", mPosts, " Type : ", typeof (mPosts)
-            , " mPosts[0] : ", mPosts[0], " mPosts[0].user : ", mPosts[0].user, " mPosts[0].user.email : ", mPosts[0].user.email);
-
-
-          console.log("Newsfeed Screen DATA : ", data, " Type : ", typeof (data)
-            , " data[0].user : ", data[0].user, " data[0].user.email : ", data[0].user.email);
 
         });
       }
@@ -55,7 +45,7 @@ export default function Newsfeed({ navigation }) {
   function PostsFlatList() {
 
     function renderItem(item) {
-      console.log("renderItem : ", item)
+      //console.log("renderItem : ", item)
       return (
         <TouchableWithoutFeedback style={{ margin: 5 }}>
           <Text style={{ fontSize: 20, marginBottom: 10 }}>{item.user.email}</Text>
