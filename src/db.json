@@ -21,7 +21,7 @@
       "id": 2,
       "image": 3,
       "place": "Paris",
-      "userId": {
+      "user": {
         "id": 1,
         "email": "maria",
         "password": "123"

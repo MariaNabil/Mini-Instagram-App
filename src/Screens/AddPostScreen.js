@@ -76,6 +76,7 @@ export default function PostScreen({ navigation }) {
 
     }
   }
+  //#region FlatList
   function ImagesFlatList() {
 
     function renderItem(item) {
@@ -94,6 +95,7 @@ export default function PostScreen({ navigation }) {
         renderItem={({ item }) => renderItem(item)} />
     )
   }
+  //#endregion
   //#endregion
 
   //#region Styles

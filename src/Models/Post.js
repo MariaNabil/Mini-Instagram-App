@@ -1,10 +1,12 @@
+import User from "./User";
+
 export default class Post {
 
     constructor(id, image, place, user) {
         this.id = id;
         this.image = image;
         this.place = place;
-        this.user = user;
+        this.user = (user);
     }
 
     set setId(val) {
