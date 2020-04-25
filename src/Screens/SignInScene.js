@@ -11,35 +11,21 @@ export default function SignInScene({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-
-
   const logo = {
     uri: 'https://reactnative.dev/img/tiny_logo.png',
     width: 64,
     height: 64
   };
 
-  async function getUsers() {
-    try {
-      const data = await api.request('users', 'GET', {});
-      console.log("SignInScreen getUsers Success : length ", data)
-      return data;
-    } catch (error) {
-      console.log("SignInScreen getUsers ERROR : ", error)
-      return null;
-      //throw error
-    }
-  }
-
   async function onSignInBtnPressed() {
     try {
       if (await isConnected()) {
-        const allEmails = await getUsers();
-        if (allEmails == null) {
+        const allUsers = await getUsers();
+        if (allUsers == null) {
           await showAlert("Server Connection", "Please Check Your Server Connection")
           return;
         }
-        userId = checkCredentials(email, password, allEmails);
+        userId = checkCredentials(email, password, allUsers);
         if (userId != null && userId != undefined) {
           console.log("checkCredentials local id : ", userId)
           let mUser = new User(userObj = { id: userId, email: email, password: password });
@@ -58,6 +44,17 @@ export default function SignInScene({ navigation }) {
     } catch (error) {
       console.log("SignInScene onSignInBtnPressed error : ", error);
 
+    }
+  }
+
+  async function getUsers() {
+    try {
+      const data = await api.request('users', 'GET', {});
+      console.log("SignInScreen getUsers Success : length ", data)
+      return data;
+    } catch (error) {
+      console.log("SignInScreen getUsers ERROR : ", error)
+      return null;
     }
   }
 
@@ -82,10 +79,6 @@ export default function SignInScene({ navigation }) {
       }
     }
   }
-
-
-
-
 
   return (
     <View style={styles.container}>

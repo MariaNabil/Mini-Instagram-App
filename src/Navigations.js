@@ -6,7 +6,7 @@ import SignInScene from './screens/SignInScene';
 import Bucketlist from './screens/Bucketlist';
 import Profile from './screens/Profile';
 import Newsfeed from './screens/Newsfeed';
-import Post from './screens/Post';
+import Post from './screens/AddPostScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 import { store } from './redux/store';
 import { Provider } from 'react-redux';

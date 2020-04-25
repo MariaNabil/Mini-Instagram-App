@@ -16,7 +16,12 @@ export default function Bucketlist({ navigation }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        await getPlacesFromAsyncStorage('@bucketlist');
+        const unsubscribe = navigation.addListener('focus', async () => {
+          // The screen is focused
+          // Call any action
+          await getPlacesFromAsyncStorage('@bucketlist');
+        });
+
       } catch (error) {
         console.log("BUCKETLIST SCREEN useEffect Error : ", error);
       }
@@ -75,6 +80,10 @@ export default function Bucketlist({ navigation }) {
       setText('');
       return;
     }
+    if (text == null || text.length == 0) {
+      showAlert("Not Allowed", "Please Add A Place ")
+      return;
+    }
     let p = places;
     p.push({ id, name } = place);
     setPlaces(p);
@@ -96,10 +105,11 @@ export default function Bucketlist({ navigation }) {
         <TextInput placeholder='Place' style={{
           flex: 1, alignSelf: 'stretch', backgroundColor: "#DDDDDD",
           margin: 10, paddingHorizontal: 20
-        }} onChangeText={(text) => {
-          setText(text)
-          setPlace({ "id": text, "place": text })
         }}
+          onChangeText={(text) => {
+            setText(text)
+            setPlace({ "id": text, "place": text })
+          }}
           defaultValue={text}>
         </TextInput>
         <TouchableOpacity style={{

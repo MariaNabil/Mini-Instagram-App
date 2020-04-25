@@ -21,6 +21,7 @@
     "react": "16.11.0",
     "react-native": "0.61.5",
     "react-native-gesture-handler": "^1.6.1",
+    "react-native-multi-selectbox": "^1.2.8",
     "react-native-netinfo": "^1.1.0",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^0.7.3",

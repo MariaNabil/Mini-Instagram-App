@@ -77,7 +77,7 @@ class API {
     async postUsingAxios(path, obj) {
         try {
             const response = await this.instance.post(path, obj)
-            console.log("API Class , postUsingAxios , response : ", response)
+            /// console.log("API Class , postUsingAxios , response : ", response)
             if (response && response.data != undefined) {
                 return response.data;
             }

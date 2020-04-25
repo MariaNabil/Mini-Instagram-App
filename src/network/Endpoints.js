@@ -15,14 +15,14 @@ class EndPoints {
                 url: WEBOPS_API.BUCKETLIST,
                 //method: API_METHODS.GET,
                 needsAuth: false
-            }
-            /*"posts": {
+            },
+            "posts": {
                 baseUrl: WEBOPS_API.BASE_URL,
                 url: WEBOPS_API.POSTS,
-                method: API_METHODS.GET,
+                ///method: API_METHODS.GET,
                 needsAuth: false
-            },
-            "users": {
+            }
+            /*"users": {
                 baseUrl: WEBOPS_API.BASE_URL,
                 url: WEBOPS_API.USERS,
                 method: API_METHODS.GET,
