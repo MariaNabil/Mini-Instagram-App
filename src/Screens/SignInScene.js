@@ -62,6 +62,7 @@ export default function SignInScene({ navigation }) {
   }
   //#endregion
 
+  //#region Helper Function
   function checkCredentials(email, password, allEmails) {
     console.log("EMAILS : ", allEmails);
     let e = allEmails.filter(obj => obj.email == email)
@@ -83,6 +84,7 @@ export default function SignInScene({ navigation }) {
       }
     }
   }
+  //#endregion
 
   return (
     <View style={styles.container}>
