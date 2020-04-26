@@ -10,11 +10,47 @@ import Post from './screens/AddPostScreen';
 import { store } from './redux/store';
 import { Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import Icon from 'react-native-vector-icons/Fontisto';
 
 function ApplicationTabs() {
+  const [c, setc] = useState('black')
   return (
-    <Tab.Navigator >
+    <Tab.Navigator screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+
+        if (route.name === 'Newsfeed') {
+          setc('#EE4646')
+          iconName = focused
+            ? 'applemusic'
+            : 'curve';
+          color = '#EE4646';
+
+          size = focused
+            ? 20 : 10;
+
+
+        } else if (route.name === 'Bucket List') {
+          color = '#FF7F50'
+          setc(color)
+          size = focused
+            ? 20 : 10;
+        }
+        else if (route.name === 'Profile') {
+          color = '#3498DB';
+          setc(color)
+          size = focused
+            ? 20 : 10;
+        }
+
+        // You can return any component that you like here!
+        return <Icon name='curve' size={size} color={color} />;
+      },
+    })}
+      tabBarOptions={{
+        activeTintColor: 'black',
+        inactiveTintColor: 'gray',
+      }} >
       <Tab.Screen name="Newsfeed" component={ApplicationStack} />
       <Tab.Screen name="Bucket List" component={Bucketlist} />
       <Tab.Screen name="Profile" component={Profile} />
