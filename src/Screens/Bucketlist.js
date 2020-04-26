@@ -110,9 +110,9 @@ export default function Bucketlist({ navigation }) {
         </TextInput>
         <TouchableOpacity style={{
           flex: 1, paddingHorizontal: 15,
-          margin: 10, borderColor: 'black', borderWidth: 1, borderRadius: 10
+          margin: 10, borderColor: 'black', borderWidth: 0, borderRadius: 10, backgroundColor: '#FF7F50'
         }} onPress={onAddBucketBtnPressed} >
-          <Text style={{ flex: 1, fontSize: 20, fontWeight: 'bold', textAlignVertical: 'center' }}>+</Text>
+          <Text style={{ flex: 1, fontSize: 20, textAlignVertical: 'center', color: 'white' }}>+</Text>
         </TouchableOpacity>
       </View>
       <FillFlatList data={places}></FillFlatList>

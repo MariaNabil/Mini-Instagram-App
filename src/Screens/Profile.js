@@ -3,7 +3,7 @@ import { Text, View, Image, Dimensions } from 'react-native';
 import { store, signOut, removeUser } from '../redux/store';
 import { showAlert, deleteAsyncStorage, isConnected } from '../Helpers'
 import User from '../Models/User';
-import { TouchableOpacity, TouchableWithoutFeedback, FlatList, ScrollView } from 'react-native-gesture-handler';
+import { TouchableOpacity, TouchableWithoutFeedback, FlatList } from 'react-native-gesture-handler';
 import { api } from '../network';
 import Post from '../Models/Post'
 import { images } from '../Constants';
@@ -14,6 +14,7 @@ export default function Profile({ navigation }) {
   const dimensions = Dimensions.get('window');
   const imageHeight = Math.round(dimensions.width * 9 / 16);
   const imageWidth = dimensions.width - 10;
+  //#region useEffect
   useEffect(() => {
     try {
       async function runAsync() {
@@ -25,10 +26,8 @@ export default function Profile({ navigation }) {
     } catch (error) {
       console.log("Profile Screen ERROR : ", error)
     }
-    return function cleanup() {
-      //setIsSelectedImage(false)
-    };
   }, [])
+  //#endregion
 
   async function reload() {
     try {
@@ -39,9 +38,6 @@ export default function Profile({ navigation }) {
       let userObj = new User(JSON.parse(store.getState().user));
       setUser(userObj.email);
       let data = await api.request('posts', 'GET', {});
-      //console.log("Profile Screen DATA : ", data, " TYPE : ", typeof (data), " data[0] : ", data[0],
-      // " data[0].image : ", data[0].image)
-
       let myPosts = data.filter(obj => obj.user.id == userObj.id)
       let tempUserPosts = [];
       for (let i = 0; i < myPosts.length; i++) {
@@ -54,6 +50,16 @@ export default function Profile({ navigation }) {
     }
   }
 
+  //#region Event Handlers
+  async function logoutBtnPressed() {
+    await deleteAsyncStorage('@current_user');
+    await deleteAsyncStorage('@bucketlist');
+    store.dispatch(signOut());
+    store.dispatch(removeUser());
+  }
+  //#endregion
+
+  //#region UI Helper Functions
   function MyPostsFlatList() {
     function renderItem(item) {
       //console.log("renderItem : ", item)
@@ -68,21 +74,16 @@ export default function Profile({ navigation }) {
     return (
       <FlatList style={{ marginVertical: 20, alignSelf: 'stretch', alignContent: 'stretch' }}
         data={userPosts}
-        renderItem={({ item }) => renderItem(item)} />
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => renderItem(item)}
+        ListFooterComponent={getFooter}
+        ListHeaderComponent={getHeader} />
     )
   }
-  async function logoutBtnPressed() {
-    await deleteAsyncStorage('@current_user');
-    await deleteAsyncStorage('@bucketlist');
-    store.dispatch(signOut());
-    store.dispatch(removeUser());
-    showAlert("Congratulations!", " You Signed Out ");
-  }
 
-
-  return (
-    <ScrollView>
-      <View style={{}}>
+  const getHeader = () => {
+    return (
+      <View>
         <Image style={{ width: 100, height: 100, borderColor: 'black', borderWidth: 0, alignSelf: 'center' }} source={{ uri: 'https://www.kindpng.com/picc/m/22-223965_no-profile-picture-icon-circle-member-icon-png.png' }}></Image>
         <Text style={{ margin: 10, fontSize: 20, alignSelf: 'center' }}>{user}</Text>
         <TouchableOpacity
@@ -95,16 +96,29 @@ export default function Profile({ navigation }) {
           }}>Logout</Text>
         </TouchableOpacity >
         <View style={{ height: 1, backgroundColor: 'gray', marginVertical: 20 }}></View>
-        <MyPostsFlatList />
-        <TouchableOpacity
-          onPress={reload}>
-          <Text style={{
-            marginHorizontal: 20,
-            color: 'white', textAlignVertical: 'center', borderRadius: 20,
-            backgroundColor: '#3498DB', paddingHorizontal: 40, paddingVertical: 13, alignSelf: 'center'
-          }}>Reload</Text>
-        </TouchableOpacity >
+
       </View>
-    </ScrollView>
+    )
+  }
+
+  const getFooter = () => {
+    return (
+      <TouchableOpacity
+        onPress={reload}>
+        <Text style={{
+          marginHorizontal: 20,
+          color: 'white', textAlignVertical: 'center', borderRadius: 20,
+          backgroundColor: '#3498DB', paddingHorizontal: 40, paddingVertical: 13, alignSelf: 'center'
+        }}>Reload</Text>
+      </TouchableOpacity >
+    )
+  }
+  //#endregion
+
+
+
+
+  return (
+    <MyPostsFlatList />
   );
 }

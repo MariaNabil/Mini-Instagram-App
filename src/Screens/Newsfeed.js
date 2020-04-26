@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Image, ScrollView, Dimensions }
+import { Text, View, Image, ScrollView, Dimensions, SafeAreaView }
   from 'react-native';
 import { api } from '../network';
 import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -58,37 +58,38 @@ export default function Newsfeed({ navigation }) {
 
     function renderItem(item) {
       //console.log("renderItem : ", item)
+
       return (
         <TouchableWithoutFeedback style={{ margin: 5 }}>
           <Text style={{ fontSize: 20, marginBottom: 10 }}>{item.user.email}</Text>
           <Image style={{ height: imageHeight, width: imageWidth }} source={imgPaths[item.image - 1]} />
           <Text style={{ fontSize: 10, marginBottom: 10 }}>{item.place}</Text>
           <View style={{ height: 1, backgroundColor: 'gray', marginVertical: 20 }}></View>
-
         </TouchableWithoutFeedback>
       )
     }
     return (
       <FlatList style={{ marginVertical: 20, alignSelf: 'stretch', alignContent: 'stretch' }}
         data={posts}
-        renderItem={({ item }) => renderItem(item)} />
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => renderItem(item)}
+        ListFooterComponent={getFooter}
+      />
     )
   }
-  //#endregion
 
+  const getFooter = () => {
+    return <TouchableOpacity
+      onPress={reload}>
+      <Text style={{
+        marginHorizontal: 20,
+        color: 'white', textAlignVertical: 'center', borderRadius: 20,
+        backgroundColor: '#EE4646', paddingHorizontal: 40, paddingVertical: 13, alignSelf: 'center'
+      }}>Reload</Text>
+    </TouchableOpacity >;
+  };
+  //#endregion
   return (
-    <ScrollView>
-      <View style={{ flex: 1, alignItems: 'stretch' }}>
-        <PostsFlatList />
-        <TouchableOpacity
-          onPress={reload}>
-          <Text style={{
-            marginHorizontal: 20,
-            color: 'white', textAlignVertical: 'center', borderRadius: 20,
-            backgroundColor: '#EE4646', paddingHorizontal: 40, paddingVertical: 13, alignSelf: 'center'
-          }}>Reload</Text>
-        </TouchableOpacity >
-      </View>
-    </ScrollView>
+    <PostsFlatList />
   );
 }

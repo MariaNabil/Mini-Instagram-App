@@ -1,5 +1,5 @@
 export const WEBOPS_API = {
-    BASE_URL: "http://192.168.1.3:3000/",
+    BASE_URL: "http://192.168.1.4:3000/",
     USERS: 'users',
     BUCKETLIST: 'bucketlist',
     POSTS: 'posts'
