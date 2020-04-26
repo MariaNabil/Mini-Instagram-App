@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TextInput, Alert, TouchableWithoutFeedback }
+import { Text, View, TextInput, TouchableWithoutFeedback }
   from 'react-native';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -17,11 +17,8 @@ export default function Bucketlist({ navigation }) {
     async function fetchData() {
       try {
         const unsubscribe = navigation.addListener('focus', async () => {
-          // The screen is focused
-          // Call any action
           await getPlacesFromAsyncStorage('@bucketlist');
         });
-
       } catch (error) {
         console.log("BUCKETLIST SCREEN useEffect Error : ", error);
       }
@@ -54,13 +51,12 @@ export default function Bucketlist({ navigation }) {
     return (
       <View style={{ padding: 10 }}>
         <FlatList
-
           padding={30}
           data={props.data}
           renderItem={({ item }) => (
             <TouchableWithoutFeedback onPress={() => actionOnRow(item)}>
-              <View style={{ height: 50 }}>
-                <Text style={{ height: 50 }}>{item.place}</Text>
+              <View style={{ height: 50, marginBottom: 20 }}>
+                <Text style={{ height: 45 }}>{item.place}</Text>
                 <View style={{ height: 1, backgroundColor: 'gray' }}></View>
               </View>
             </TouchableWithoutFeedback>
@@ -101,10 +97,10 @@ export default function Bucketlist({ navigation }) {
 
   return (
     <View style={{ flex: 1, alignItems: 'stretch', flexDirection: 'column' }}>
-      <View style={{ flexDirection: 'row', height: 70 }}>
+      <View style={{ flexDirection: 'row', height: 70, marginTop: 30 }}>
         <TextInput placeholder='Place' style={{
           flex: 1, alignSelf: 'stretch', backgroundColor: "#DDDDDD",
-          margin: 10, paddingHorizontal: 20
+          margin: 10, paddingHorizontal: 20, marginLeft: 30
         }}
           onChangeText={(text) => {
             setText(text)
@@ -114,7 +110,7 @@ export default function Bucketlist({ navigation }) {
         </TextInput>
         <TouchableOpacity style={{
           flex: 1, paddingHorizontal: 15,
-          margin: 10, borderColor: 'black', borderWidth: 1
+          margin: 10, borderColor: 'black', borderWidth: 1, borderRadius: 10
         }} onPress={onAddBucketBtnPressed} >
           <Text style={{ flex: 1, fontSize: 20, fontWeight: 'bold', textAlignVertical: 'center' }}>+</Text>
         </TouchableOpacity>

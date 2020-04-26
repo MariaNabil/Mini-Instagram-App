@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Button, Alert, Image, Dimensions } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import { store, signOut, logout, removeUser } from '../redux/store';
-import { showAlert, deleteAsyncStorage } from '../Helpers'
+import { Text, View, Image, Dimensions } from 'react-native';
+import { store, signOut, removeUser } from '../redux/store';
+import { showAlert, deleteAsyncStorage, isConnected } from '../Helpers'
 import User from '../Models/User';
 import { TouchableOpacity, TouchableWithoutFeedback, FlatList, ScrollView } from 'react-native-gesture-handler';
 import { api } from '../network';
@@ -32,23 +31,30 @@ export default function Profile({ navigation }) {
   }, [])
 
   async function reload() {
-    let userObj = new User(JSON.parse(store.getState().user));
-    setUser(userObj.email);
-    let data = await api.request('posts', 'GET', {});
-    //console.log("Profile Screen DATA : ", data, " TYPE : ", typeof (data), " data[0] : ", data[0],
-    // " data[0].image : ", data[0].image)
+    try {
+      if (!(await isConnected())) {
+        showAlert("You Are Offline", "Please Check Your Internet Connetion And Reload")
+        return;
+      }
+      let userObj = new User(JSON.parse(store.getState().user));
+      setUser(userObj.email);
+      let data = await api.request('posts', 'GET', {});
+      //console.log("Profile Screen DATA : ", data, " TYPE : ", typeof (data), " data[0] : ", data[0],
+      // " data[0].image : ", data[0].image)
 
-    let myPosts = data.filter(obj => obj.user.id == userObj.id)
-    let tempUserPosts = [];
-    for (let i = 0; i < myPosts.length; i++) {
-      let userPost = new Post(myPosts[i].id, myPosts[i].image, myPosts[i].place, myPosts[i].user);
-      tempUserPosts.push(userPost);
+      let myPosts = data.filter(obj => obj.user.id == userObj.id)
+      let tempUserPosts = [];
+      for (let i = 0; i < myPosts.length; i++) {
+        let userPost = new Post(myPosts[i].id, myPosts[i].image, myPosts[i].place, myPosts[i].user);
+        tempUserPosts.push(userPost);
+      }
+      setUserPosts(tempUserPosts)
+    } catch (error) {
+      showAlert('' + error, "Please Check Your Server Connection And Reload");
     }
-    setUserPosts(tempUserPosts)
   }
 
   function MyPostsFlatList() {
-
     function renderItem(item) {
       //console.log("renderItem : ", item)
       return (
@@ -91,7 +97,6 @@ export default function Profile({ navigation }) {
         <View style={{ height: 1, backgroundColor: 'gray', marginVertical: 20 }}></View>
         <MyPostsFlatList />
         <TouchableOpacity
-          title="Logout"
           onPress={reload}>
           <Text style={{
             marginHorizontal: 20,

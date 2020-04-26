@@ -4,7 +4,7 @@ import styles from '../styles';
 import { api } from '../network';
 import { store, signIn, signOut, logIn, logout, addUser } from '../redux/store'
 import User from '../Models/User';
-import { CheckConnectivity, showAlert, saveInAsyncStorage, isConnected } from '../Helpers'
+import { showAlert, saveInAsyncStorage, isConnected } from '../Helpers'
 
 
 export default function SignInScene({ navigation }) {

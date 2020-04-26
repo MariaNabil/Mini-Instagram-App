@@ -1,6 +1,5 @@
 import { Alert, Platform } from 'react-native';
 import NetInfo from '@react-native-community/netinfo'
-import { useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export function CheckConnectivity() {
@@ -23,7 +22,7 @@ export async function isConnected() {
     let flag = false;
     flag = await NetInfo.fetch().then(state => {
         console.log("Connection type", state.type);
-        console.log("Is connected?", typeof (state.isConnected));
+        console.log("Is connected?", (state.isConnected));
         if (state.isConnected) {
             return true;
         }

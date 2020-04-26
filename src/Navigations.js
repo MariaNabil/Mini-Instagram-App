@@ -7,9 +7,9 @@ import Bucketlist from './screens/Bucketlist';
 import Profile from './screens/Profile';
 import Newsfeed from './screens/Newsfeed';
 import Post from './screens/AddPostScreen';
-import AsyncStorage from '@react-native-community/async-storage';
 import { store } from './redux/store';
-import { Provider } from 'react-redux';
+import { Text } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 function ApplicationTabs() {
@@ -22,10 +22,23 @@ function ApplicationTabs() {
   );
 }
 
-function ApplicationStack() {
+function ApplicationStack(navigation) {
   return (
     <Stack.Navigator initialRouteName="Newsfeed">
-      <Stack.Screen name="Newsfeed" component={Newsfeed} />
+      <Stack.Screen name="Newsfeed" component={Newsfeed}
+        options={({ navigation, route }) => ({
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Add a Post')}>
+              <Text style={{
+                marginHorizontal: 20,
+                color: 'white', textAlignVertical: 'center', borderRadius: 20,
+                backgroundColor: '#EE4646', paddingHorizontal: 20, paddingVertical: 10, alignSelf: 'center', fontSize: 20
+              }}>+</Text>
+            </TouchableOpacity >
+          )
+        })}
+      />
       <Stack.Screen name="Add a Post" component={Post} />
     </Stack.Navigator>
   );
@@ -44,15 +57,14 @@ export default function Navigations() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator   >
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false
+        }}  >
         {store.getState().isSignedIn ?
           <Stack.Screen name="ApplicationTabs" component={ApplicationTabs} />
           :
           <Stack.Screen name="AuthenticationStack" component={SignInScene} />}
-
-        {/*d<Stack.Screen name="AuthenticationStack" component={SignInScene} />
-        <Stack.Screen name="ApplicationTabs" component={ApplicationTabs} />*/}
-
       </Stack.Navigator>
     </NavigationContainer>
   );
