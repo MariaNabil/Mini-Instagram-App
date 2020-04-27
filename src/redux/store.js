@@ -1,9 +1,11 @@
-import { configureStore, createAction, createReducer, createSlice, reducers } from '@reduxjs/toolkit';
+import { configureStore, createSlice } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga'
-///import { loginUser } from './Sagas'
 import { getDefaultMiddleware } from '@reduxjs/toolkit'
 import User from '../Models/User';
+import { handleLoadUsers, watchRefreshUsers } from './sagas'
+import { mySagaReducer } from './MySagaReducer'
 
+//#region Redux Toolkit Slices
 const navSlice = createSlice({
     name: 'navState',
     initialState: 'AuthenticationStack',
@@ -24,7 +26,6 @@ const rootSlice = createSlice({
     name: 'isSignedIn',
     initialState: false,
     reducers: {
-        //signIn: state => true
         signIn: (state) => {
             state = true;
             return state;
@@ -52,43 +53,32 @@ const userSlice = createSlice({
 
     },
 })
+//#region 
+
 const sagaMiddleware = createSagaMiddleware();
-
-//sagaMiddleware.run(loginUser);
-
-
-const middleware = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware];
-
 
 export const store = configureStore({
     reducer: {
         isSignedIn: rootSlice.reducer,
         user: userSlice.reducer,
         navState: navSlice.reducer,
-    },
-    middleware,
-});
+        users: mySagaReducer,
+    }
+    ,
+    middleware: [...getDefaultMiddleware({ thunk: false }), sagaMiddleware]
+}
+);
 
+sagaMiddleware.run(handleLoadUsers);
+sagaMiddleware.run(watchRefreshUsers);
 
-//sagaMiddleware.run(loginUser);
-/*
-const AppNavigator = StackNavigator(Navigations());
+export const action = type => store.dispatch({ type });
 
-const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('AuthenticationStack'));
-
-const navReducer = (state = initialState, action) => {
-    const nextState = AppNavigator.router.getStateForAction(action, state);
-
-    // Simply return the original `state` if `nextState` is null or undefined.
-    return nextState || state;
-};
-*/
+//#region onStateChange Listener
 function onStateChange() {
     var s = store.getState();
     console.log("STORE onStateChanged : ", s);
-    //console.log(store.getState().user);
 }
-
 
 store.subscribe(onStateChange)
 export const { signIn, signOut } = rootSlice.actions

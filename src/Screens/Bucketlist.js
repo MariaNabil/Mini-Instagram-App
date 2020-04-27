@@ -5,7 +5,11 @@ import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import { saveInAsyncStorage, showAlert } from '../Helpers'
 
+
+
 export default function Bucketlist({ navigation }) {
+  const [dataSet, setDataSet] = useState();
+
   //#region States
   const [place, setPlace] = useState({});
   const [places, setPlaces] = useState([]);

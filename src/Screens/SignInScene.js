@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, TextInput, Button, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, TextInput, Button } from 'react-native';
 import styles from '../styles';
-import { api } from '../network';
-import { store, signIn, signOut, logIn, logout, addUser } from '../redux/store'
+import { store, signIn, addUser, action } from '../redux/store'
 import User from '../Models/User';
 import { showAlert, saveInAsyncStorage, isConnected } from '../Helpers'
 
 
 export default function SignInScene({ navigation }) {
+  //#region Const
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const logo = {
     uri: 'https://scontent.fcai19-2.fna.fbcdn.net/v/t1.0-9/28471629_178448202883051_8258080051899849260_n.png?_nc_cat=107&_nc_sid=09cbfe&_nc_ohc=4wmnzSAXCGkAX9B8-D4&_nc_ht=scontent.fcai19-2.fna&oh=41bb9d7dd39c247231611c96e0f0057d&oe=5ECBBB54',
     width: 120,
     height: 120
   };
+  //#endregion
 
   //#region Event Handlers
   async function onSignInBtnPressed() {
@@ -52,7 +52,12 @@ export default function SignInScene({ navigation }) {
   //#region Api Requests
   async function getUsers() {
     try {
-      const data = await api.request('users', 'GET', {});
+      await action("REFRESH_USERS");
+      const data = store.getState().users;
+      if (data == null) {
+        return null
+      }
+      //const data = await api.request('users', 'GET', {});
       console.log("SignInScreen getUsers Success : length ", data)
       return data;
     } catch (error) {

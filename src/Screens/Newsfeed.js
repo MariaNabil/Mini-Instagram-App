@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Image, ScrollView, Dimensions, SafeAreaView }
+import { Text, View, Image, Dimensions }
   from 'react-native';
 import { api } from '../network';
 import { TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native-gesture-handler';
