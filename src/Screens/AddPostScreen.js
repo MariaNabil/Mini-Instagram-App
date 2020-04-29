@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, Button, Picker, Image, StyleSheet } from 'react-native';
-import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
+import { TouchableOpacity, FlatList, ScrollView } from 'react-native-gesture-handler';
 import { getFromAsyncStorage, saveInAsyncStorage } from '../Helpers'
 import { showAlert } from '../Helpers'
 import { api } from '../network';
@@ -92,10 +92,14 @@ export default function PostScreen({ navigation }) {
     return (
       <FlatList style={{ marginVertical: 20 }} horizontal={true}
         data={images}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => renderItem(item)} />
     )
   }
   //#endregion
+  const getFooter = () => {
+
+  }
   //#endregion
 
   //#region Styles
@@ -114,8 +118,7 @@ export default function PostScreen({ navigation }) {
   //#endregion
 
   return (
-    <View >
-
+    <ScrollView >
       <ImagesFlatList />
       <Image
         style={[styles.hidden, isSelectedImage ? styles.visible : {}]}
@@ -126,7 +129,6 @@ export default function PostScreen({ navigation }) {
           height: 50, alignSelf: 'stretch', backgroundColor: '#DDDDDD',
           marginHorizontal: 20, paddingHorizontal: 20, marginVertical: 20
         }}
-
         onValueChange={(itemValue, itemIndex) => setSelectedPlace(itemValue)}>
         <Picker.Item label="Choose A Place" value="0" />
         {bucketlistItems}
@@ -138,6 +140,6 @@ export default function PostScreen({ navigation }) {
           backgroundColor: '#FF7F50', paddingHorizontal: 40, paddingVertical: 13, marginVertical: 20
         }}>Add</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }

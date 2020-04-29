@@ -111,6 +111,16 @@
         "email": "Amin",
         "password": "123"
       }
+    },
+    {
+      "id": 11,
+      "image": 1,
+      "place": "Maldives",
+      "user": {
+        "id": 2,
+        "email": "Amin",
+        "password": "123"
+      }
     }
   ]
 }
