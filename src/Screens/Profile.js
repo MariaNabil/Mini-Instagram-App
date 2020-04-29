@@ -73,7 +73,7 @@ export default function Profile({ navigation }) {
     }
     return (
       <FlatList style={{ marginVertical: 20, alignSelf: 'stretch', alignContent: 'stretch' }}
-        data={userPosts}
+        data={userPosts.reverse()}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => renderItem(item)}
         ListFooterComponent={getFooter}

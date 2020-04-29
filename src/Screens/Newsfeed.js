@@ -37,7 +37,7 @@ export default function Newsfeed({ navigation }) {
       }
       let data = await api.request('posts', 'GET', {});
       let mPosts = [];
-      for (let i = 0; i < data.length; i++) {
+      for (let i = data.length - 1; i >= 0; i--) {
         let postObj = new Post(data[i].id, data[i].image, data[i].place, data[i].user);
         mPosts.push(postObj);
       }
